@@ -19,7 +19,7 @@ class GetConversationResponse implements DtoResponse
         $this->session          = $session;
         $this->reply            = $reply;
         $this->alternativeReply = $alternativeReply;
-        $this->infoResponse          = $infoResponse;
+        $this->infoResponse     = $infoResponse;
     }
 
     public function session(): array
@@ -55,7 +55,7 @@ class GetConversationResponse implements DtoResponse
     public function toArray(): array
     {
         return array_merge(array_merge($this->session, array_merge(
-                            $this->alternativeReply,
+                            ['reply' => $this->reply],
                             $this->alternativeReply),
                             $this->infoResponse));
     }

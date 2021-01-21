@@ -5,7 +5,11 @@ namespace App\Providers;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 use Inbenta\YodaBot\Application\Query\GetConversationReplyQueryHandler;
+use Inbenta\YodaBot\Domain\Entities\Character\CharacterFactory;
+use Inbenta\YodaBot\Domain\Entities\Movie\MovieFactory;
 use Inbenta\YodaBot\Infrastructure\Api\ConversationConnection;
+use Inbenta\YodaBot\Infrastructure\Repositories\Character\CharacterRepository;
+use Inbenta\YodaBot\Infrastructure\Repositories\Movie\MovieRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,22 +28,19 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('Inbenta\\YodaBot\\Domain\\Conversation\\Conversation',
             'Inbenta\\YodaBot\\Infrastructure\\Api\\ConversationConnection');
 
-        /*
         $this->app->bind('Inbenta\\YodaBot\\Application\\Query\\GetConversationReplyQueryHandler', function($app)
         {
             return new GetConversationReplyQueryHandler(
                 new ConversationConnection(
                     new Client()
-                )
-            );
-        });
-        */
-
-        $this->app->bind('Inbenta\\YodaBot\\Application\\Query\\GetConversationReplyQueryHandler', function($app)
-        {
-            return new GetConversationReplyQueryHandler(
-                new ConversationConnection(
-                    new Client()
+                ),
+                new CharacterRepository(
+                    new Client(),
+                    new CharacterFactory()
+                ),
+                new MovieRepository(
+                    new Client(),
+                    new MovieFactory()
                 )
             );
         });

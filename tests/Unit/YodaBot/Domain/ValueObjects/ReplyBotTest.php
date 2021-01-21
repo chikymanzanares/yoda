@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\YodaBot\Domain\ValueObjects;
 
-use Inbenta\YodaBot\Domain\ValueObjects\Reply;
 use Inbenta\YodaBot\Domain\ValueObjects\ReplyBot;
 use PHPUnit\Framework\TestCase;
 

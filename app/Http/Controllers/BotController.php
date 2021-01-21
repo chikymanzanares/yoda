@@ -17,8 +17,7 @@ class BotController extends Controller
     protected GetConversationReplyQueryHandler $getConversationReplyQueryHandler;
 
     public function __construct(SessionInterface $session,
-                                ContainerInterface $container
-        )
+                                ContainerInterface $container)
     {
         $this->session = $session;
         $this->container = $container;
@@ -26,33 +25,6 @@ class BotController extends Controller
 
     public function __invoke()
     {
-
         return (view('yoda'));
-    }
-
-
-    private function getSession(): array
-    {
-        $this->session = $this->container->get(SessionInterface::class);
-        $this->arraySession = [
-            'expiration' => $this->session->get('expiration'),
-            'accessToken' => $this->session->get('accessToken'),
-            'sessionToken' => $this->session->get('sessionToken'),
-            'sessionId' => $this->session->get('sessionId'),
-            'chatBot' => $this->session->get('chatBot'),
-            'previousNotFound' => $this->session->get('previousNotFound'),
-        ];
-        return $this->arraySession;
-    }
-
-    private function setSession(array $arraySession): void
-    {
-        $this->session->set('expiration', $arraySession['expiration']);
-        $this->session->set('accessToken', $arraySession['accessToken']);
-        $this->session->set('sessionToken', $arraySession['sessionToken']);
-        $this->session->set('sessionId', $arraySession['sessionId']);
-        $this->session->set('chatBot', $arraySession['chatBot']);
-        $this->session->set('previousNotFound', $arraySession['previousNotFound']);
-        $this->arraySession = $arraySession;
     }
 }

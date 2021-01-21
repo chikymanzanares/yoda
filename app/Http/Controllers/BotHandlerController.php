@@ -3,15 +3,8 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Client;
-
 use Inbenta\YodaBot\Application\Query\GetConversationReplyQuery;
 use Inbenta\YodaBot\Application\Query\GetConversationReplyQueryHandler;
-use Inbenta\YodaBot\Domain\Entities\Character\CharacterFactory;
-use Inbenta\YodaBot\Domain\Entities\Movie\MovieFactory;
-use Inbenta\YodaBot\Infrastructure\Api\ConversationConnection;
-use Inbenta\YodaBot\Infrastructure\Repositories\Character\CharacterRepository;
-use Inbenta\YodaBot\Infrastructure\Repositories\Movie\MovieRepository;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +14,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class BotHandlerController extends Controller
 {
-
     protected SessionInterface $session;
     protected Request $request;
     protected ContainerInterface $container;
@@ -31,28 +23,14 @@ class BotHandlerController extends Controller
     public function __construct(SessionInterface $session,
                                 ContainerInterface $container,
                                 Request $request,
-                                JsonResponse $jsonResponse
-                                //, GetConversationReplyQueryHandler $getConversationReplyQueryHandler
-        )
+                                JsonResponse $jsonResponse,
+                                GetConversationReplyQueryHandler $getConversationReplyQueryHandler)
     {
         $this->session = $session;
         $this->request = $request;
         $this->container = $container;
         $this->jsonResponse = $jsonResponse;
-        //$this->getConversationReplyQueryHandler = $getConversationReplyQueryHandler;
-        $this->getConversationReplyQueryHandler = new GetConversationReplyQueryHandler(
-            new ConversationConnection(
-                new Client()
-            ),
-            new CharacterRepository(
-                new Client(),
-                new CharacterFactory()
-            ),
-            new MovieRepository(
-                new Client(),
-                new MovieFactory()
-            )
-        );
+        $this->getConversationReplyQueryHandler = $getConversationReplyQueryHandler;
     }
 
     public function reply()
