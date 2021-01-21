@@ -77,7 +77,6 @@
                                 {text: replyBot, speaker: 'YodaBot', alternatives: replyJSON.alternativeReply}
                             );
                             localStorage.setItem('history', JSON.stringify(this.interventions));
-                            console.log(localStorage.getItem('history'));
                             this.alert = '';
                             this.message = '';
                         })

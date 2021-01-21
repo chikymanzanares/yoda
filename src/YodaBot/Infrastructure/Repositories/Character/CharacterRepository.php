@@ -22,6 +22,7 @@ class CharacterRepository implements CharacterRepositoryInterface
     {
         $this->client = $client;
         $this->characterFactory = $characterFactory;
+        // TODO dependency graphql builder
     }
 
     public function getCharacters(): CharacterCollection
