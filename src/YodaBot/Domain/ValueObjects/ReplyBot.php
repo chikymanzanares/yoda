@@ -17,10 +17,10 @@ class ReplyBot
 
     protected function validCondition($value)
     {
-        if (!(isset($value)
-            && is_array($value))
-            && (!(isset($value['answers'][0]['type'])))
-            && (!(isset($value['answers'][0]['message'])))){
+        if (!(isset($value))
+            || !(is_array($value))
+            || (!(isset($value['answers'][0]['type'])))
+            || (!(isset($value['answers'][0]['message'])))){
             return false;
         }
         return true;

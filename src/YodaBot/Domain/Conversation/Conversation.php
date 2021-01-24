@@ -3,13 +3,16 @@
 namespace Inbenta\YodaBot\Domain\Conversation;
 
 
+use Inbenta\YodaBot\Domain\ValueObjects\Reply;
+use Inbenta\YodaBot\Domain\ValueObjects\ReplyBot;
+use Inbenta\YodaBot\Domain\ValueObjects\Session;
+
 interface Conversation
 {
-    function initConversation(): array;
+    function initConversation(): Session;
 
-    function sendReply(array $session, string $reply): array;
+    function sendReply(Session $session, Reply $reply): ReplyBot;
 
-    function tokenHasExpired(array $session): bool;
+    function tokenHasExpired(Session $session): bool;
 
-    function connectIfSessionExpiredAndSendReply(array $session, string $reply): array;
 }

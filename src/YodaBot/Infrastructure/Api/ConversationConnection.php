@@ -5,6 +5,9 @@ namespace Inbenta\YodaBot\Infrastructure\Api;
 
 use GuzzleHttp\Client;
 use Inbenta\YodaBot\Domain\Conversation\Conversation;
+use Inbenta\YodaBot\Domain\ValueObjects\Reply;
+use Inbenta\YodaBot\Domain\ValueObjects\ReplyBot;
+use Inbenta\YodaBot\Domain\ValueObjects\Session;
 use Symfony\Component\HttpFoundation\Request;
 
 class ConversationConnection implements Conversation
@@ -30,7 +33,7 @@ class ConversationConnection implements Conversation
 
     }
 
-    function initConversation(): array
+    function initConversation(): Session
     {
         $headers = [
             'x-inbenta-key' => $this->apiKey,
@@ -77,49 +80,44 @@ class ConversationConnection implements Conversation
         $arrayResponse = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         $this->sessionToken = $arrayResponse['sessionToken'];
         $this->sessionId = $arrayResponse['sessionId'];
-        return [
+        return new Session([
             'accessToken' => $this->accessToken,
             'expiration' => $this->expiration,
             'sessionToken' => $this->sessionToken,
             'sessionId' => $this->sessionId,
             'chatBot' => $this->chatBot
-        ];
+        ]);
     }
 
-    function sendReply(array $session, string $reply): array
+    function sendReply(Session $session, Reply $reply): ReplyBot
     {
+        $sessionArray = $session->getValue();
         $headers = [
             'x-inbenta-key' => $this->apiKey,
-            'Authorization' => 'Bearer '.$session['accessToken'],
-            'x-inbenta-session' => 'Bearer '.$session['sessionToken']
+            'Authorization' => 'Bearer '.$sessionArray['accessToken'],
+            'x-inbenta-session' => 'Bearer '.$sessionArray['sessionToken']
         ];
 
         $this->client = new Client(['headers' => $headers]);
         $body = [
-            'message' => $reply
+            'message' => $reply->getValue()
         ];
         $response = $this->client->request(
             'POST',
-            $session['chatBot'].'/conversation/message',
+            $sessionArray['chatBot'].'/conversation/message',
             [
                 'form_params' =>
                     $body
             ]
         );
         $arrayResponse = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        return $arrayResponse;
+        return new ReplyBot($arrayResponse);
     }
 
-    function tokenHasExpired(array $session): bool
+    function tokenHasExpired(Session $session): bool
     {
-        return (!(isset($session['expiration']))) || ($session['expiration'] < time());
+        $sessionArray = $session->getValue();
+        return (!(isset($sessionArray['expiration']))) || ($sessionArray['expiration'] < time());
     }
 
-    function connectIfSessionExpiredAndSendReply(array $session, string $reply): array
-    {
-        if ($this->tokenHasExpired($session)){
-            $session = $this->initConversation();
-        }
-        return array_merge($this->sendReply($session,  $reply),$session);
-    }
 }

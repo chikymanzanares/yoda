@@ -47,4 +47,21 @@ class ReplyBotTest extends TestCase
         $this->assertFalse($replyBot->notFoundAnswer());
         $this->assertEquals($replyBot->getValueResponse(), "Powerful you have become, the dark side I sense in you. What answers do you seek?");
     }
+
+    public function testInvalidReply()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $replyBot = new ReplyBot(
+            ['invent' =>
+                [
+                    'type' => 'answer',
+                    'message' => "Powerful you have become, the dark side I sense in you. What answers do you seek?",
+                    'messageList' => ["Powerful you have become, the dark side I sense in you. What answers do you seek?"]
+                ]
+            ]
+        );
+        $this->assertTrue($replyBot instanceof ReplyBot);
+        $this->assertFalse($replyBot->notFoundAnswer());
+        $this->assertEquals($replyBot->getValueResponse(), "Powerful you have become, the dark side I sense in you. What answers do you seek?");
+    }
 }
