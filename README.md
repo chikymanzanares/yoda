@@ -1,6 +1,4 @@
 
-## INBENTA Chanllenge
-## this challenge is a Yoda Bot
 
 ** to run the app
 
